@@ -1,0 +1,4 @@
+agate = red
+gabin = green
+manael = blue
+lautre = yellow
