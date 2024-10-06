@@ -6,7 +6,7 @@ echo '
             <ul>
                 <li>
                     <a href="../accueil/accueil.php">Accueil</a>
-                    <a href="accueil.php">Paramètre</a>
+                    <a href="../parametre/parametre.php">Paramètre</a>
                     ';
                         if($_SESSION['role'] == 'Admin'){
                             echo '<a href="../admin/admin.php">Admin</a>';
@@ -21,6 +21,7 @@ echo '
         
             nav {
                 width: 100%;
+                height: 60px;
                 display: flex;
                 justify-content: flex-end;
             }

@@ -39,7 +39,7 @@ if(isset($_GET['id'])) {
         <?php
 
             $sql = "
-                SELECT Enfants.nom_enfant, Enfants.prenom_enfant, Enfants.photo, Repas.date_repas, Repas.repas_midi, Repas.repas_quatre_heure, Repas.info_supplementaires
+                SELECT Enfants.nom_enfant, Enfants.prenom_enfant, Enfants.photo, Repas.date_repas, Repas.repas_midi, Repas.repas_quatre_heure, Repas.info_supplementaires, Repas.absence
                 FROM Enfants
                 INNER JOIN Repas ON Enfants.id_enfant = Repas.id_enfant
                 WHERE Enfants.id_enfant = $id_enfant
@@ -48,30 +48,53 @@ if(isset($_GET['id'])) {
 
             if($result->num_rows > 0){
                 while ($row = $result->fetch_assoc()) {
-                    echo '
-                    
-                    <div class="container">
-                        <div class="header">
-                            <div>
-                                <div class="img">
-                                    <img src="../img./'. $row['photo'] .'" alt="Photo">
+
+                    if($row['absence'] == 1){
+                        echo '
+                        
+                        <div class="container">
+                            <div class="header">
+                                <div>
+                                    <div class="img">
+                                        <img src="../img./'. $row['photo'] .'" alt="Photo">
+                                    </div>
+                                    <h4>'. $row['nom_enfant'] . " " . $row['prenom_enfant'] . '</h4>
                                 </div>
-                                <h4>'. $row['nom_enfant'] . " " . $row['prenom_enfant'] . '</h4>
+                                <p class="date">'. $row['date_repas'] .'</p>
                             </div>
-                            <p class="date">'. $row['date_repas'] .'</p>
+                            <div class="content">
+                                Absent le '. $row['date_repas'] .'
+                            </div>
                         </div>
-                        <div class="content">
-                            Repas du '. $row['date_repas'] .' : <br>
-                            <p class="space">Midi : <br> </p>
-                            <p class="space2">'. $row['repas_midi'] .' <br> </p>
-                            <p class="space">4h : <br> </p>
-                            <p class="space2"> '. $row['repas_quatre_heure'] .' <br> </p>
-                            <p class="space">Supp : <br> </p>
-                            <p class="space2"> '. $row['info_supplementaires'] .' <br> </p>
+                        
+                        ';
+                    }else{
+                        echo '
+                        
+                        <div class="container">
+                            <div class="header">
+                                <div>
+                                    <div class="img">
+                                        <img src="../img./'. $row['photo'] .'" alt="Photo">
+                                    </div>
+                                    <h4>'. $row['nom_enfant'] . " " . $row['prenom_enfant'] . '</h4>
+                                </div>
+                                <p class="date">'. $row['date_repas'] .'</p>
+                            </div>
+                            <div class="content">
+                                Repas du '. $row['date_repas'] .' : <br>
+                                <p class="space">Midi : <br> </p>
+                                <p class="space2">'. $row['repas_midi'] .' <br> </p>
+                                <p class="space">4h : <br> </p>
+                                <p class="space2"> '. $row['repas_quatre_heure'] .' <br> </p>
+                                <p class="space">Supp : <br> </p>
+                                <p class="space2"> '. $row['info_supplementaires'] .' <br> </p>
+                            </div>
                         </div>
-                    </div>
-                    
-                    ';
+                        
+                        ';
+                    }
+
                 }
             }
 
