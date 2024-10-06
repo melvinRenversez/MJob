@@ -117,7 +117,7 @@ include '../php/database.php';
                                         <input id="abs_'. $row['id_enfant'] .'" id="abs" type="checkbox" name="abs">
                                     </div>
                                     <div class="submit">
-                                        <input type="submit" value="Sauvegarder">
+                                        <input type="submit" value="Ajouter">
                                     </div>
                                 </form>
                             </div>
