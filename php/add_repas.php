@@ -23,18 +23,45 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         echo $repas_4_heure . "<br>";
         echo $info_supplementaire . "<br>";
 
-        $sql = 'INSERT INTO Repas (id_enfant, date_repas, repas_midi, repas_quatre_heure, info_supplementaires) VALUES (?, ?, ?, ?, ?)';
+        $test = $conn->prepare("SELECT * FROM Repas WHERE id_enfant = ? AND date_repas = ?");
+        $test->bind_param("is", $id_enfant, $date_repas);
+        $test->execute();
+        $test_result = $test->get_result();
 
-        $stmt = $conn->prepare($sql);
+        if ($test_result->num_rows > 0){
+            echo "update";
 
-        $stmt->bind_param('issss', $id_enfant, $date_repas, $repas_midi, $repas_4_heure, $info_supplementaire);
+            $sql = 'UPDATE Repas SET repas_midi = ?, repas_quatre_heure = ?, info_supplementaires = ? WHERE id_enfant = ? AND date_repas = ?';
+    
+            $stmt = $conn->prepare($sql);
+    
+            $stmt->bind_param('sssis',$repas_midi, $repas_4_heure, $info_supplementaire, $id_enfant , $date_repas);
+    
+    
+            if( $stmt->execute() ){
+                echo "repas mis a jour avec succées";
+                header("Location: ../admin/admin.php");
+            }else{
+                echo "Erreur";
+            }
 
-
-        if( $stmt->execute() ){
-            echo "repas ajouter avec succées";
         }else{
-            echo "Erreur";
+
+            $sql = 'INSERT INTO Repas (id_enfant, date_repas, repas_midi, repas_quatre_heure, info_supplementaires) VALUES (?, ?, ?, ?, ?)';
+    
+            $stmt = $conn->prepare($sql);
+    
+            $stmt->bind_param('issss', $id_enfant, $date_repas, $repas_midi, $repas_4_heure, $info_supplementaire);
+    
+    
+            if( $stmt->execute() ){
+                echo "repas ajouter avec succées";
+                header("Location: ../admin/admin.php");
+            }else{
+                echo "Erreur";
+            }
         }
+
 
 
     }

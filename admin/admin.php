@@ -26,42 +26,91 @@ include '../php/database.php';
     ?>
     <div class="container">
     <?php
+        
+        $date_du_jour = date('Y-m-d');
+
         $sql = "SELECT id_enfant, nom_enfant, prenom_enfant FROM Enfants";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
 
-            
 
             while($row = $result->fetch_assoc()) {
-                echo '
-                    <div class="box">
-                        <div class="header">
-                            <h4>'. $row['nom_enfant'] . " ". $row['prenom_enfant'] .'</h4> 
-                            <h4>'. $row['id_enfant'] .'</h4>
+
+
+                $test = $conn->prepare("SELECT * FROM Repas WHERE id_enfant = ? AND date_repas = ?");
+                $test->bind_param("is", $row['id_enfant'], $date_du_jour);
+                $test->execute();
+                $test_result = $test->get_result();
+
+                if ($test_result->num_rows > 0) {
+
+                    $existing_meal   = $test_result->fetch_assoc();
+
+                    echo '
+                        <div class="box">
+                            <div class="header">
+                                <h4>'. $row['nom_enfant'] . " ". $row['prenom_enfant'] .'</h4> 
+                                <h4>'. $row['id_enfant'] .'</h4>
+                            </div>
+                            <div class="content">
+                                <form action="../php/add_repas.php" method="POST">
+                                    <input type="hidden" name="id_enfant" value="'. $row['id_enfant']. '">
+                                    <label for="">Date repas : </label>
+                                    <input id="inputDesable" type="date" name="date_repas" value="'. $date_du_jour .'">
+                                    <label for="">repas midi : </label>
+                                    <input id="inputDesable" type="text" name="repas_midi" value="'. $existing_meal['repas_midi'] .'">
+                                    <label for="">repas 4 heure : </label>
+                                    <input id="inputDesable" type="text" name="repas_4_heure" value="'. $existing_meal['repas_quatre_heure'] .'">
+                                    <label for="">Info supplementaire : </label>
+                                    <textarea id="inputDesable" name="info_supp">'. $existing_meal['info_supplementaires'] .'</textarea>
+                                    <div>
+                                        <label for="">Absent </label>
+                                        <input id="abs" type="checkbox" name="abs">
+                                    </div>
+                                    <div class="submit">
+                                        <input type="submit" value="Save">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="content">
-                            <form action="../php/add_repas.php" method="POST">
-                                <input type="hidden" name="id_enfant" value="'. $row['id_enfant']. '">
-                                <label for="">Date repas : </label>
-                                <input id="inputDesable" type="date" name="date_repas" value="2024-10-05">
-                                <label for="">repas midi : </label>
-                                <input id="inputDesable" type="text" name="repas_midi" value="m">
-                                <label for="">repas 4 heure : </label>
-                                <input id="inputDesable" type="text" name="repas_4_heure" value="h">
-                                <label for="">Info supplementaire : </label>
-                                <textarea id="inputDesable" name="info_supp">s</textarea>
-                                <div>
-                                    <label for="">Absent </label>
-                                    <input id="abs" type="checkbox" name="abs">
-                                </div>
-                                <div class="submit">
-                                    <input type="submit" value="Save">
-                                </div>
-                            </form>
+                    ';
+
+
+                }else{
+
+                    echo '
+                        <div class="box">
+                            <div class="header">
+                                <h4>'. $row['nom_enfant'] . " ". $row['prenom_enfant'] .'</h4> 
+                                <h4>'. $row['id_enfant'] .'</h4>
+                            </div>
+                            <div class="content">
+                                <form action="../php/add_repas.php" method="POST">
+                                    <input type="hidden" name="id_enfant" value="'. $row['id_enfant']. '">
+                                    <label for="">Date repas : </label>
+                                    <input id="inputDesable" type="date" name="date_repas" value="'. $date_du_jour .'">
+                                    <label for="">repas midi : </label>
+                                    <input id="inputDesable" type="text" name="repas_midi" >
+                                    <label for="">repas 4 heure : </label>
+                                    <input id="inputDesable" type="text" name="repas_4_heure">
+                                    <label for="">Info supplementaire : </label>
+                                    <textarea id="inputDesable" name="info_supp"></textarea>
+                                    <div>
+                                        <label for="">Absent </label>
+                                        <input id="abs" type="checkbox" name="abs">
+                                    </div>
+                                    <div class="submit">
+                                        <input type="submit" value="Save">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                ';
+                    ';
+
+                }
+
+
             }
         } else {
             echo "0 results";
