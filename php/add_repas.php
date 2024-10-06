@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if ($test_result->num_rows > 0){
         echo "update";
-
+        
         $sql = 'UPDATE Repas SET repas_midi = ?, repas_quatre_heure = ?, info_supplementaires = ?, absence = ? WHERE id_enfant = ? AND date_repas = ?';
 
         $stmt = $conn->prepare($sql);
