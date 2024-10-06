@@ -30,6 +30,9 @@ include '../php/database.php';
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
+
+            
+
             while($row = $result->fetch_assoc()) {
                 echo '
                     <div class="box">
@@ -38,18 +41,19 @@ include '../php/database.php';
                             <h4>'. $row['id_enfant'] .'</h4>
                         </div>
                         <div class="content">
-                            <form action="">
+                            <form action="../php/add_repas.php" method="POST">
+                                <input type="hidden" name="id_enfant" value="'. $row['id_enfant']. '">
                                 <label for="">Date repas : </label>
-                                <input id="inputDesable" type="date" name="" value="2024-10-05">
+                                <input id="inputDesable" type="date" name="date_repas" value="2024-10-05">
                                 <label for="">repas midi : </label>
-                                <input id="inputDesable" type="text">
+                                <input id="inputDesable" type="text" name="repas_midi" value="m">
                                 <label for="">repas 4 heure : </label>
-                                <input id="inputDesable" type="text">
+                                <input id="inputDesable" type="text" name="repas_4_heure" value="h">
                                 <label for="">Info supplementaire : </label>
-                                <textarea name="" id="inputDesable"></textarea>
+                                <textarea id="inputDesable" name="info_supp">s</textarea>
                                 <div>
                                     <label for="">Absent </label>
-                                    <input id="abs" type="checkbox" name="" id="">
+                                    <input id="abs" type="checkbox" name="abs">
                                 </div>
                                 <div class="submit">
                                     <input type="submit" value="Save">
