@@ -43,6 +43,7 @@ if(isset($_GET['id'])) {
                 FROM Enfants
                 INNER JOIN Repas ON Enfants.id_enfant = Repas.id_enfant
                 WHERE Enfants.id_enfant = $id_enfant
+                ORDER BY Repas.date_repas DESC
             ";
             $result = $conn->query($sql);
 
